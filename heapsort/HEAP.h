@@ -1,13 +1,12 @@
 #pragma once
 template <typename T>
-typedef struct HEAP
+struct HEAP
 {                                  ////////////////////////
 	int HeapSize;                  //数组中该堆元素的个数//
 	int length;                    //     数组长度       //
-	T* HeapArray=new T[length]     //   为数组分配内存   //
+	T* HeapArray = new T[length];  //   为数组分配内存   //
 };                                 ////////////////////////
-template<typename T>               //                    //
-T TMIN(template T);                //返回对应类型的最小值//
+
 inline  int PARENT(int i) noexcept{ return (i+1)/2 - 1;   }
 //返回i的父节点
 inline  int LEFT  (int i) noexcept{ return 2*(i+1)-1;     }

@@ -4,19 +4,7 @@
 #include<cfloat>
 #include<cstdlib>
 #include<iostream>
-template<typename T>
-T TMIN(typename T) {
-	switch (T)
-	{
-	case short:return SHRT_MIN;
-	case long:return LONG_MIN;
-	case long long:return LLONG_MIN;
-	case  float:return FLT_MIN;
-	case double:return DBL_MIN;
-	case long double:LDBL_MIN;
-	default:return INT_MAX;
-	}
-}
+
 template <typename T>
 void MAX_HEAPIFY(HEAP<T>& heap, int i)
 {
@@ -41,7 +29,7 @@ template <typename T>
 void BUILD_MAX_HEAP(HEAP<T>& heap)
 {
 	heap.HeapSize = heap.length;
-	for (int i = (heap.length+1)\2 - 1; i >= 0; i--)
+	for (int i = (heap.length + 1) / 2 - 1 ; i >= 0; i--)
 		MAX_HEAPIFY(heap, i);
 	return;
 }
@@ -78,8 +66,8 @@ T HEAP_EXTRACT_MAX(HEAP<T>& heap)
 	auto max = heap.HeapArray[0];
 	heap.HeapArray[0] = heap.HeapArray[heap.HeapSize - 1];
 	heap.HeapSize--;
-	MAX_HEAPIFY(heap, 0)
-		return max;
+	MAX_HEAPIFY(heap, 0);
+	return max;
 }
 template <typename T>
 bool HEAP_INCREASE_KEY(HEAP<T>& heap, int i, T key)
@@ -108,7 +96,13 @@ bool HEAP_INCREASE_KEY(HEAP<T>& heap, int i, T key)
 template <typename T>
 void MAX_HEAP_INSERT(HEAP<T>& heap, T key)
 {
-	heap.HeapSize++;
-	heap.HeapArray[heap.HeapSize - 1] = TMIN(T);
-	HEAP_INCREASE_KEY(heap, heap.HeapSize, key);
+	int i = heap.HeapSize++;
+	heap.HeapArray[i] = key;
+	while (i > 0 && heap.HeapArray[PARENT(i)] < heap.HeapArray[i])
+	{
+		auto exchange = heap.HeapArray[i];
+		heap.HeapArray[i] = heap.HeapArray[PARENT(i)];
+		heap.HeapArray[PARENT(i)] = exchange;
+		i = PARENT(i);
+	}
 }
