@@ -1,5 +1,22 @@
 #include"HEAP.h"
+#include<exception>
+#include<climits>
+#include<cfloat>
+#include<cstdlib>
 #include<iostream>
+template<typename T>
+T TMIN(typename T) {
+	switch (T)
+	{
+	case short:return SHRT_MIN;
+	case long:return LONG_MIN;
+	case long long:return LLONG_MIN;
+	case  float:return FLT_MIN;
+	case double:return DBL_MIN;
+	case long double:LDBL_MIN;
+	default:return INT_MAX;
+	}
+}
 template <typename T>
 void MAX_HEAPIFY(HEAP<T>& heap, int i)
 {
@@ -39,4 +56,59 @@ void HEAPSORT(HEAP<T>& heap)
 	}
 	heap.HeapSize--;
 	MAX_HEAPIFY(heap, 1);
+}
+template <typename T>
+T HEAP_MAXIMUM(const HEAP<T>& heap)
+{
+	return heap.HeapArray[0];
+}
+template <typename T>
+T HEAP_EXTRACT_MAX(HEAP<T>& heap)
+{
+	try 
+	{
+		if (heap.HeapSize < 1)
+			throw("heap underflow");
+	}
+	catch(const char*)
+	{
+		std::cout << "heap underflow\n";
+		std::abort();
+	}
+	auto max = heap.HeapArray[0];
+	heap.HeapArray[0] = heap.HeapArray[heap.HeapSize - 1];
+	heap.HeapSize--;
+	MAX_HEAPIFY(heap, 0)
+		return max;
+}
+template <typename T>
+bool HEAP_INCREASE_KEY(HEAP<T>& heap, int i, T key)
+{
+	i--;
+	try
+	{
+		if (key < heap.HeapArray[i])
+			throw("new key is smaller than current key");
+	}
+	catch(const char*)
+	{
+		std::cout << "new key is smaller than current key\n";
+		std::abort();
+	}
+	heap.HeapArray[i] = key;
+	while (i > 0 && heap.HeapArray[PARENT(i)] < heap.HeapArray[i])
+	{
+		auto exchange = heap.HeapArray[i];
+		heap.HeapArray[i] = heap.HeapArray[PARENT(i)];
+		heap.HeapArray[PARENT(i)] = exchange;
+		i = PARENT(i);
+	}
+	return true;
+}
+template <typename T>
+void MAX_HEAP_INSERT(HEAP<T>& heap, T key)
+{
+	heap.HeapSize++;
+	heap.HeapArray[heap.HeapSize - 1] = TMIN(T);
+	HEAP_INCREASE_KEY(heap, heap.HeapSize, key);
 }
